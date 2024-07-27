@@ -6,6 +6,7 @@ import { PrismaTasksRepository } from "./infra/prisma/repositories/tasks.reposit
 import { TasksRepository } from "./repositories/tasks.repository";
 import { CreateTask } from "./services/CreateTask.service";
 import { UsersModule } from "../users/users.module";
+import { DeleteTask } from "./services/DeleteTask.service";
 
 @Module({
     controllers: [TasksController],
@@ -17,6 +18,7 @@ import { UsersModule } from "../users/users.module";
             useClass: PrismaTasksRepository,
         },
         CreateTask,
+        DeleteTask,
     ],
 })
 export class TasksModule {
