@@ -1,10 +1,21 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+/* eslint-disable prettier/prettier */
+import { Module } from "@nestjs/common";
+import { UsersModule } from "./modules/users/users.module";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+      ConfigModule.forRoot({
+        envFilePath: [
+          ".env.local",
+          ".env",
+          ...(process.env.NODE_ENV === "production"
+            ? [".env.production.local", ".env.prodution"]
+            : [".env.development.local", ".env.development"]),
+        ],
+      }),
+      UsersModule,
+    ],
+    providers: [],
 })
-export class AppModule {}
+export class AppModule { }
