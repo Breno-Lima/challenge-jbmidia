@@ -2,6 +2,7 @@
 import { Module } from "@nestjs/common";
 import { UsersModule } from "./modules/users/users.module";
 import { ConfigModule } from "@nestjs/config";
+import { TasksModule } from "@modules/tasks/tasks.module";
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from "@nestjs/config";
             : [".env.development.local", ".env.development"]),
         ],
       }),
+      TasksModule,
       UsersModule,
     ],
     providers: [],

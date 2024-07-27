@@ -25,5 +25,6 @@ export interface SignJwt {
 }
 
 export abstract class JwtProvider {
-    abstract sign(data: SignJwt): Promise<string>;
+    abstract sign(data: SignJwt): string;
+    abstract decode(jwt: string): Record<string, any>;
 }

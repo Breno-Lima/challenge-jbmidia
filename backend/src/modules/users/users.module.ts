@@ -11,6 +11,7 @@ import { JwtProvider, jwtProviders } from "./providers/JwtProvider";
 
 @Module({
     controllers: [UsersController],
+    exports: [UsersRepository],
     providers: [
       PrismaService,
       {

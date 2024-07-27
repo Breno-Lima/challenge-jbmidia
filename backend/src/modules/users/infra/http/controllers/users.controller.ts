@@ -1,7 +1,7 @@
 import { AuthenticateUser } from "./../../../services/AuthenticateUser.service";
 import { Response } from "express";
-import type { AuthenticateUserDTO } from "@modules/users/dtos/AuthenticateUser.dto";
-import type { CreateUserDTO } from "@modules/users/dtos/CreateUser.dto";
+import { AuthenticateUserDTO } from "@modules/users/dtos/AuthenticateUser.dto";
+import { CreateUserDTO } from "@modules/users/dtos/CreateUser.dto";
 import { CreateUser } from "@modules/users/services/CreateUser.service";
 import { Body, Controller, Post, Res } from "@nestjs/common";
 import type { User } from "@prisma/client";
@@ -26,8 +26,8 @@ export class UsersController {
         const jwt = await this.authenticateUser.execute(body);
 
         res.cookie("Authorization", `Bearer ${jwt}`, {
-            secure: true,
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
         });
     }
 }
