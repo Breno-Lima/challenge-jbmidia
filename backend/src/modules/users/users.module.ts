@@ -6,6 +6,8 @@ import { UsersRepository } from "./repositories/users.repository";
 import { PrismaUsersRepository } from "./infra/prisma/repositories/users.repository";
 import { PrismaService } from "@database/prisma.service";
 import { HashProvider, hashProviders } from "./providers/HashProvider";
+import { AuthenticateUser } from "./services/AuthenticateUser.service";
+import { JwtProvider, jwtProviders } from "./providers/JwtProvider";
 
 @Module({
     controllers: [UsersController],
@@ -19,6 +21,11 @@ import { HashProvider, hashProviders } from "./providers/HashProvider";
         provide: HashProvider,
         useClass: hashProviders[process.env.HASH_DRIVER],
       },
+      {
+        provide: JwtProvider,
+        useClass: jwtProviders[process.env.JWT_DRIVER],
+      },
+      AuthenticateUser,
       CreateUser,
     ],
 })
