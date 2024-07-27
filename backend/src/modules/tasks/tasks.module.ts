@@ -7,6 +7,7 @@ import { TasksRepository } from "./repositories/tasks.repository";
 import { CreateTask } from "./services/CreateTask.service";
 import { UsersModule } from "../users/users.module";
 import { DeleteTask } from "./services/DeleteTask.service";
+import { ListTasks } from "./services/ListTasks.service";
 
 @Module({
     controllers: [TasksController],
@@ -19,6 +20,7 @@ import { DeleteTask } from "./services/DeleteTask.service";
         },
         CreateTask,
         DeleteTask,
+        ListTasks,
     ],
 })
 export class TasksModule {
