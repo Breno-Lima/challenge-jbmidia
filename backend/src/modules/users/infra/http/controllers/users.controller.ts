@@ -28,6 +28,7 @@ export class UsersController {
         res.cookie("Authorization", `Bearer ${jwt}`, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
+            sameSite: "none",
         });
     }
 }
