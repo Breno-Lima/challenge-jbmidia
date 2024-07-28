@@ -39,7 +39,7 @@ export default function Form() {
             setTimeout(() => {
                 const params = new URLSearchParams();
                 params.set('data', JSON.stringify(data));
-                router.push(`/login?${params.toString()}`);
+                router.push(`/login`);
             }, 2000);
         } else {
             toast.error(data.message || 'Ocorreu um erro');
