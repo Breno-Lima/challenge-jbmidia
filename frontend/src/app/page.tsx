@@ -7,7 +7,6 @@ import Form from "./components/form/form";
 
 
 export default async function Home() {
-
   return (
     <main className="bg-primary min-h-screen flex justify-center items-center">
       <div className="flex flex-col md:flex-row items-center md:space-x-8">
@@ -24,7 +23,7 @@ export default async function Home() {
         </div>
         <div className="w-full md:w-1/2 p-5 h-3/4 flex flex-col bg-secondary border-none rounded-md">
           <p className="flex justify-end mr-4 pb-2 text-greebook">Já tem uma conta? <Link href="/login" className="ml-2 text-blue-200">Conecte-se</Link></p>
-          <Form />
+          <Form isLogin={false} />
         </div>
       </div>
     </main>

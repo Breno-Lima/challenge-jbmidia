@@ -5,7 +5,7 @@ import { Input, Button } from '@nextui-org/react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-export default function Form() {
+export default function Form({ isLogin }: { isLogin: boolean }) {
     const router = useRouter();
     const [formData, setFormData] = useState({
         username: '',
@@ -13,7 +13,7 @@ export default function Form() {
         password: ''
     });
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
@@ -21,48 +21,66 @@ export default function Form() {
         }));
     };
 
-    const registerUser = async (e: any) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+        const url = isLogin
+            ? `${process.env.NEXT_PUBLIC_API_URL}/users/login`
+            : `${process.env.NEXT_PUBLIC_API_URL}/users`;
 
-        const data = await response.json();
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+                credentials: 'include',
+            });
 
-        if (response.ok) {
-            toast.success('Mensagem de sucesso');
-            setTimeout(() => {
-                const params = new URLSearchParams();
-                params.set('data', JSON.stringify(data));
-                router.push(`/login`);
-            }, 2000);
-        } else {
-            toast.error(data.message || 'Ocorreu um erro');
-            console.error(data.message);
-            return { success: false, message: data.message };
+            console.log(response);
+
+            let data;
+            try {
+                if (response.headers.get('Content-Length') !== '0') {
+                    data = await response.json();
+                } else {
+                    data = null;
+                }
+            } catch (error) {
+                console.error('Erro ao analisar a resposta JSON:', error);
+                data = null;
+            }
+
+            if (response.ok) {
+                toast.success(isLogin ? 'Login realizado com sucesso' : 'Cadastro realizado com sucesso');
+                setTimeout(() => {
+                    router.push(isLogin ? `/dashboard` : `/login`);
+                }, 2000);
+            } else {
+                console.error(data ? data.message : 'Erro desconhecido');
+            }
+        } catch (error) {
+            console.error('Erro ao fazer a requisição:', error);
+            toast.error('Erro ao fazer a requisição. Por favor, tente novamente.');
         }
-
-        return { success: true, data };
     };
 
     return (
         <div className="w-full h-3/4 flex flex-col bg-secondary border-none rounded-md">
-            <form method="post" onSubmit={registerUser}>
+            <form method="post" onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-4'>
-                    <Input
-                        type="text"
-                        label="Username"
-                        name="username"
-                        placeholder="Enter your username"
-                        className="dark"
-                        value={formData.username}
-                        onChange={handleChange}
-                    />
+                    {!isLogin && (
+                        <Input
+                            type="text"
+                            label="Username"
+                            name="username"
+                            placeholder="Enter your username"
+                            className="dark"
+                            value={formData.username}
+                            onChange={handleChange}
+                        />
+                    )}
                     <Input
                         type="email"
                         label="Email"
@@ -85,7 +103,7 @@ export default function Form() {
                         className="bg-greenbook text-gray-800 shadow-lg text-md shadow-green-600/50 w-full"
                         type="submit"
                     >
-                        Register
+                        {isLogin ? 'Entrar' : 'Registrar'}
                     </Button>
                 </div>
             </form>

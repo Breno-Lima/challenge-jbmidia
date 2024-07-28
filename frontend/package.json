@@ -13,6 +13,7 @@
     "@nextui-org/react": "^2.4.6",
     "@nextui-org/system": "^2.2.5",
     "@nextui-org/theme": "^2.2.9",
+    "@phosphor-icons/react": "^2.1.7",
     "framer-motion": "^11.3.19",
     "next": "14.2.5",
     "react": "^18",
