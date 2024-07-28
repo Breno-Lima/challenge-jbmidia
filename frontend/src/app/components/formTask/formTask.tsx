@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Image from 'next/image';
 import check from "../../../assets/images/check.svg";
+import trash from "../../../assets/images/trash.svg";
 
 interface Task {
     id: string;
@@ -104,6 +105,42 @@ export default function FormTask() {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/tasks/${id}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                toast.success('Task deleted successfully');
+                fetchTasks();
+            } else {
+                let data;
+                try {
+                    if (response.headers.get('Content-Length') !== '0') {
+                        data = await response.json();
+                    } else {
+                        data = { message: 'Unknown error' };
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                    data = { message: 'Unknown error' };
+                }
+                console.error(data.message);
+                toast.error(data.message || 'Failed to delete task');
+            }
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            toast.error('Error deleting task. Please try again.');
+        }
+    };
+
     useEffect(() => {
         fetchTasks();
     }, []);
@@ -111,7 +148,7 @@ export default function FormTask() {
     return (
         <div className="flex flex-col w-3/4">
             <div>
-                <h1 className="text-greenbook text-3xl"> Lets create your tasks! </h1>
+                <h1 className="text-greenbook text-3xl">Lets create your tasks!</h1>
             </div>
 
             <div className="flex justify-center pt-10 w-full">
@@ -146,9 +183,17 @@ export default function FormTask() {
                 <ul>
                     {tasks.map((task) => (
                         <li key={task.id} className="text-white p-4 mb-2 rounded-md">
-                            <div className='rounded-md bg-secondary p-4'>
-                                <h3 className="text-xl text-black">Title: {task.title}</h3>
-                                <p className='text-black'> Description: {task.description}</p>
+                            <div className='rounded-md bg-secondary p-4 flex justify-between items-center'>
+                                <div>
+                                    <h3 className="text-xl text-black">Title: {task.title}</h3>
+                                    <p className='text-black'>Description: {task.description}</p>
+                                </div>
+                                <Button
+                                    className="bg-red-500 text-gray-800 shadow-lg text-md shadow-red-600/50 rounded-full flex items-center justify-center"
+                                    onClick={() => handleDelete(task.id)}
+                                >
+                                    <Image src={trash} alt="Delete" width={24} height={24} />
+                                </Button>
                             </div>
                         </li>
                     ))}
