@@ -52,6 +52,9 @@ export default function Form({ isLogin }: { isLogin: boolean }) {
                 data = null;
             }
 
+            if (!isLogin) {
+                localStorage.setItem('username', formData.username);
+            }
             if (response.ok) {
                 toast.success(isLogin ? 'Login realizado com sucesso' : 'Cadastro realizado com sucesso');
                 setTimeout(() => {

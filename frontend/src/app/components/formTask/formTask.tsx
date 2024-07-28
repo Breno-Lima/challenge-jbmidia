@@ -21,6 +21,7 @@ export default function FormTask() {
         description: ''
     });
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [username, setUsername] = useState('username');
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
@@ -142,13 +143,17 @@ export default function FormTask() {
     };
 
     useEffect(() => {
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
         fetchTasks();
     }, []);
 
     return (
         <div className="flex flex-col w-3/4">
             <div>
-                <h1 className="text-greenbook text-3xl">Lets create your tasks!</h1>
+                <h1 className="text-greenbook text-3xl">Lets create your tasks, {username}!</h1>
             </div>
 
             <div className="flex justify-center pt-10 w-full">
