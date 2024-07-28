@@ -1,8 +1,13 @@
+'use server'
 import Image from "next/image";
 import todo from "../assets/images/vectortodo.svg";
 import { Button, Input } from "@nextui-org/react";
+import Link from 'next/link'
+import Form from "./components/form/form";
 
-export default function Home() {
+
+export default async function Home() {
+
   return (
     <main className="bg-primary min-h-screen flex justify-center items-center">
       <div className="flex flex-col md:flex-row items-center md:space-x-8">
@@ -17,13 +22,9 @@ export default function Home() {
             height={400}
           />
         </div>
-        <div className="w-full md:w-1/2 p-5 h-3/4 flex flex-col bg-secondary border-none rounded-md gap-4">
-          <Input type="text" label="Username" placeholder="Enter your username" className="dark" />
-          <Input type="email" label="Email" placeholder="Enter your email" className="dark" />
-          <Input type="password" label="Password" placeholder="Enter your password" className="dark" />
-          <Button className="bg-greenbook text-gray-800 shadow-lg text-md shadow-green-600/50">
-            Register
-          </Button>
+        <div className="w-full md:w-1/2 p-5 h-3/4 flex flex-col bg-secondary border-none rounded-md">
+          <p className="flex justify-end mr-4 pb-2 text-greebook">Já tem uma conta? <Link href="/login" className="ml-2 text-blue-200">Conecte-se</Link></p>
+          <Form />
         </div>
       </div>
     </main>
