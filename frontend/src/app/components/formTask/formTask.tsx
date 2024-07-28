@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { toast, ToastContainer } from 'react-toastify';
@@ -7,12 +7,19 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import Image from 'next/image';
 import check from "../../../assets/images/check.svg";
 
+interface Task {
+    id: string;
+    title: string;
+    description: string;
+}
+
 export default function FormTask() {
     const router = useRouter();
     const [taskData, setTaskData] = useState({
         title: '',
         description: ''
     });
+    const [tasks, setTasks] = useState<Task[]>([]);
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
@@ -37,8 +44,6 @@ export default function FormTask() {
                 credentials: 'include',
             });
 
-            console.log(response);
-
             let data;
             try {
                 if (response.headers.get('Content-Length') !== '0') {
@@ -53,9 +58,8 @@ export default function FormTask() {
 
             if (response.ok) {
                 toast.success('Task created successfully');
-                setTimeout(() => {
-                    router.push(`/`);
-                }, 2000);
+                fetchTasks();
+                setTaskData({ title: '', description: '' });
             } else {
                 console.error(data ? data.message : 'Unknown error');
                 toast.error(data ? data.message : 'Unknown error');
@@ -66,11 +70,48 @@ export default function FormTask() {
         }
     };
 
+    const fetchTasks = async () => {
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/tasks`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+
+            let data: Task[];
+            try {
+                if (response.headers.get('Content-Length') !== '0') {
+                    data = await response.json();
+                } else {
+                    data = [];
+                }
+            } catch (error) {
+                console.error('Error parsing JSON response:', error);
+                data = [];
+            }
+
+            if (response.ok) {
+                setTasks(data);
+            } else {
+                console.error('Failed to fetch tasks');
+            }
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
     return (
         <div className="flex flex-col w-3/4">
-
             <div>
-                <h1 className="text-greenbook text-3xl"> Lets create your tasks!</h1>
+                <h1 className="text-greenbook text-3xl"> Lets create your tasks! </h1>
             </div>
 
             <div className="flex justify-center pt-10 w-full">
@@ -99,6 +140,21 @@ export default function FormTask() {
                     </Button>
                 </form>
             </div>
+
+            <div className="w-full mt-10">
+                <h2 className="text-greenbook text-2xl mb-4">Your Tasks</h2>
+                <ul>
+                    {tasks.map((task) => (
+                        <li key={task.id} className="text-white p-4 mb-2 rounded-md">
+                            <div className='rounded-md bg-secondary p-4'>
+                                <h3 className="text-xl text-black">Title: {task.title}</h3>
+                                <p className='text-black'> Description: {task.description}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
             <ToastContainer />
         </div>
     );
