@@ -57,16 +57,18 @@ export default function Form({ isLogin }: { isLogin: boolean }) {
                 data = null;
             }
 
-            if (!isLogin) {
-                localStorage.setItem('username', formData.username);
-            }
             if (response.ok) {
                 toast.success(isLogin ? 'Login realizado com sucesso' : 'Cadastro realizado com sucesso');
+                if (!isLogin) {
+                    localStorage.setItem('username', formData.username);
+                }
                 setTimeout(() => {
                     router.push(isLogin ? `/dashboard` : `/login`);
                 }, 2000);
             } else {
-                console.error(data ? data.message : 'Erro desconhecido');
+                const errorMessage = data?.message || 'Erro desconhecido';
+                console.error(errorMessage);
+                toast.error(errorMessage);
             }
         } catch (error) {
             console.error('Erro ao fazer a requisição:', error);
