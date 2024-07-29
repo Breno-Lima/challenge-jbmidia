@@ -57,18 +57,16 @@ export default function Form({ isLogin }: { isLogin: boolean }) {
                 data = null;
             }
 
+            if (!isLogin) {
+                localStorage.setItem('username', formData.username);
+            }
             if (response.ok) {
                 toast.success(isLogin ? 'Login realizado com sucesso' : 'Cadastro realizado com sucesso');
-                if (!isLogin) {
-                    localStorage.setItem('username', formData.username);
-                }
                 setTimeout(() => {
                     router.push(isLogin ? `/dashboard` : `/login`);
                 }, 2000);
             } else {
-                const errorMessage = data?.message || 'Erro desconhecido';
-                console.error(errorMessage);
-                toast.error(errorMessage);
+                console.error(data ? data.message : 'Erro desconhecido');
             }
         } catch (error) {
             console.error('Erro ao fazer a requisição:', error);
@@ -79,7 +77,7 @@ export default function Form({ isLogin }: { isLogin: boolean }) {
     return (
         <div className="w-full h-3/4 flex flex-col bg-secondary border-none rounded-md">
             <form method="post" onSubmit={handleSubmit}>
-                <div className='flex flex-col gap-4'>
+                <div className='flex flex-col gap-4 '>
                     {!isLogin && (
                         <Input
                             type="text"

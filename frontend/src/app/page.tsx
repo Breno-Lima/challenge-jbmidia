@@ -8,7 +8,7 @@ import Form from "./components/form/form";
 
 export default async function Home() {
   return (
-    <main className="bg-primary min-h-screen flex justify-center items-center">
+    <main className="bg-primary min-h-screen flex justify-center items-center md:p-0 p-4">
       <div className="flex flex-col md:flex-row items-center md:space-x-8">
         <div className="w-full md:w-1/2 mb-8 md:mb-0">
           <h1 className="text-greenbook text-3xl mb-4 break-words">
