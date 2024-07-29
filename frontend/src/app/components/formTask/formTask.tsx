@@ -157,7 +157,7 @@ export default function FormTask() {
             </div>
 
             <div className="flex justify-center pt-10 w-full">
-                <form className="flex gap-6 w-full items-center" onSubmit={handleSubmit}>
+                <form className="flex gap-6 w-full items-center md:flex flex-col" onSubmit={handleSubmit}>
                     <Input
                         type="text"
                         label="Title"
